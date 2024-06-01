@@ -11,6 +11,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
         rel="stylesheet">
+    <script type="module" src="age-calculator.js"></script>
 
     <title>Frontend Mentor | Age calculator app</title>
 </head>
@@ -19,17 +20,17 @@
 
     <main class="content-container">
         <div class="input-container">
-            <div class="input-content">
+            <div class="input-content input-day">
                 <label>DAY</label>
-                <input placeholder="DD">
+                <input id="inputDay" placeholder="DD">
             </div>
-            <div class="input-content">
+            <div class="input-content input-month">
                 <label>MONTH</label>
-                <input placeholder="MM">
+                <input id="inputMonth" placeholder="MM">
             </div>
-            <div class="input-content">
+            <div class="input-content input-year">
                 <label>YEAR</label>
-                <input placeholder="YYYY">
+                <input id="inputYear" placeholder="YYYY">
             </div>
         </div>
 
@@ -39,9 +40,9 @@
         </div>
 
         <div class="result-container">
-            <div class="result-data year"><span>38</span>years</div>
-            <div class="result-data month"><span>3</span>months</div>
-            <div class="result-data day"><span>26</span>days</div>
+            <div class="result-data"><span id="resultYear">--</span>years</div>
+            <div class="result-data month"><span id="resultMonth">--</span>months</div>
+            <div class="result-data day"><span id="resultDay">--</span>days</div>
         </div>
     </main>
 

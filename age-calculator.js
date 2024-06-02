@@ -126,7 +126,7 @@ inputMonth.addEventListener('input', event => {
     const inputValue = event.target.value.trim()
     // Allow to empty string when backspace
     if (inputValue === '') {
-
+        //
     } else {
         //  If input is greater than 12 or lesser than 1, change input value to 1 or 12
         const value = Number(inputValue)
@@ -140,14 +140,27 @@ inputMonth.addEventListener('input', event => {
 
     const selectedMonth = Number(event.target.value)
 
-
-    // If the input day is beyond what the max days of the month, change it to the max day
+    // If the input day is beyond the max days of the month, change it to the max day
     // Otherwise continue
     if (inputDay.value > daysInMonth[selectedMonth - 1]) {
         inputDay.value = daysInMonth[selectedMonth - 1]
     }
 
-
+    // Makes sure it doesn't go to the future
+    if (inputYear.value === '2024') {
+        const toDate = new Date()
+        // If it's greater than or equal to the selected month
+        // Select the current month
+        // If input day is greater than today
+        // Correct value
+        // Otherwise if it's lower than today, ignore
+        if (selectedMonth >= toDate.getMonth() + 1) {
+            event.target.value = (toDate.getMonth() + 1)
+            if (inputDay.value > toDate.getDate()) {
+                inputDay.value = toDate.getDate()
+            }
+        }
+    }
 })
 
 inputDay.addEventListener('input', event => {
@@ -164,6 +177,17 @@ inputDay.addEventListener('input', event => {
             event.target.value = '1'
         }
     }
+    // Makes sure it doesn't go to the future
+    if (inputYear.value === '2024') {
+        const toDate = new Date()
+        // Input Day must be equal or less than today
+        if (inputMonth.value >= toDate.getMonth() + 1) {
+            if (event.target.value > toDate.getDate()) {
+                event.target.value = toDate.getDate()
+            }
+        }
+    }
+
     // If there is input already in month, and if day value is greater than the max day of the month
     // Change the day input to the maximum day of the month
     // Otherwise continue
@@ -179,6 +203,8 @@ inputDay.addEventListener('input', event => {
             event.target.value = maxDay
         }
     }
+
+
 })
 
 inputYear.addEventListener('blur', event => {

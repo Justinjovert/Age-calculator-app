@@ -149,3 +149,9 @@ body {
         gap: 10px;
     }
 }
+
+@media screen and (max-width: 320px) {
+    .result-container{
+        font-size: 2rem;
+    }
+}

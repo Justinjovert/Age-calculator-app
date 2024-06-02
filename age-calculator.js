@@ -1,28 +1,42 @@
 
 
+// Create a span and adjust styling for parent node
+const createErrorFeedback = (node, correct) => {
+    const imNodeNow = node.parentNode
+    // If it is an error, adjust styling
+    if (!imNodeNow.classList.contains('error-state') && correct === false) {
+        imNodeNow.classList.add('error-state')
+        const errorSpan = document.createElement('span')
+        errorSpan.classList.add('error-feedback')
+        errorSpan.textContent = "This field is required"
+        imNodeNow.appendChild(errorSpan)
+    }
+    // If it is an error feedback and is now in correct state(Not empty, integer value)
+    // Remove error feedback
+    else if (imNodeNow.classList.contains('error-state') && correct === true) {
+        imNodeNow.classList.remove('error-state')
+        const errorSpan = imNodeNow.querySelector('.error-feedback')
+        errorSpan.remove()
+    }
+    // Already correct states are ignored
+    // States that are still wrong are ignored
+    return
+}
+
+
 const updateDOM = (years, months, days) => {
     const resultYear = document.getElementById('resultYear')
     const resultMonth = document.getElementById('resultMonth')
     const resultDay = document.getElementById('resultDay')
 
-    if (isNaN(years)|| isNaN(months)|| isNaN(days)) {
-        if(isNaN(years)){
-            //If error feedback already exists
-            
-            const inputYear = document.querySelector('.input-year')
-            inputYear.classList.add('error-state')
-            const errorSpan = document.createElement('span')
-            errorSpan.classList.add('error-feedback')
-            errorSpan.textContent = "This field is required"
-            inputYear.appendChild(errorSpan)
-        }
+    //Change condition to cater empty and NaN
+    if (isNaN(years) || isNaN(months) || isNaN(days)) {
         resultYear.textContent = '--'
         resultMonth.textContent = '--'
         resultDay.textContent = '--'
-        
+
     }
-    else{
-        
+    else {
         resultYear.textContent = years
         resultMonth.textContent = months
         resultDay.textContent = days
@@ -34,8 +48,6 @@ const updateDOM = (years, months, days) => {
 const calculateAge = (formatBirthDate) => {
     const birthdate = new Date(formatBirthDate)
     const today = new Date()
-    console.log(today.getTime())
-    console.log(birthdate.getTime())
     const differenceInMS = Math.floor(today.getTime() - birthdate.getTime())
     const gapOfDays = (differenceInMS / (1000 * 60 * 60 * 24))
 
@@ -48,6 +60,17 @@ const calculateAge = (formatBirthDate) => {
 }
 
 
+// Checks if there are problems with user input
+const areTheyTrue = (args) => {
+    // Condition if value is empty, non-integer, or lower than 1
+    if (args.value === '' || !/^\d+$/.test(args.value) || args.value <= 0) {
+        return false
+    }
+    else {
+        return true
+    }
+}
+
 //Input DOMs
 const inputDay = document.getElementById('inputDay')
 const inputMonth = document.getElementById('inputMonth')
@@ -57,7 +80,38 @@ const inputYear = document.getElementById('inputYear')
 const submitButton = document.querySelector('.submit-button')
 submitButton.addEventListener('click', () => {
 
+    let isAllTrue = []
+    let inputArray = [inputDay, inputMonth, inputYear]
 
-    const formatBirthDate = inputYear.value + '-' + inputMonth.value + '-' + inputDay.value
-    calculateAge(formatBirthDate)
+    inputArray.forEach(input => {
+        isAllTrue.push(areTheyTrue(input))
+    })
+
+
+    console.log(isAllTrue)
+    // If all input is correct
+    if (isAllTrue.every(state => { return state === true })) {
+        const formatBirthDate = inputYear.value + '-' + inputMonth.value + '-' + inputDay.value
+        calculateAge(formatBirthDate)
+
+        // Remove all wronged states
+        for (let index = 0; index < isAllTrue.length; index++) {
+            if (isAllTrue[index] === true) {
+                createErrorFeedback(inputArray[index], isAllTrue[index])
+            }
+        }
+    }
+    else {
+        // If they are false, create a feedback error
+        // If they are true, remove any feedback error
+        for (let index = 0; index < isAllTrue.length; index++) {
+            if (isAllTrue[index] === false) {
+                createErrorFeedback(inputArray[index], isAllTrue[index])
+            }
+            else if (isAllTrue[index] === true) {
+                createErrorFeedback(inputArray[index], isAllTrue[index])
+            }
+        }
+    }
+
 })
